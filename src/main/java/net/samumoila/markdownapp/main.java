@@ -6,10 +6,8 @@ public class main {
 //        System.out.println(teksti);
 
         TextSimple markdownteksti = new TextSimple(MyFileReader.readFile("README.md"));
-        System.out.println(markdownteksti.getText());
-        System.out.println(markdownteksti.getCharCount());
-        System.out.println(markdownteksti.getWordCount());
-        System.out.println(markdownteksti.getRowCount());
+
+        System.out.println(markdownteksti);
 
         System.exit(0);
     }
