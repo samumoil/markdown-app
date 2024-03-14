@@ -4,12 +4,12 @@ package net.samumoila.markdownapp;
  * Tämä rajapinta on olemassa, jotta tulevaisuudessa ohjelman käyttöä voi laajentaa muihinkin tiedostomuotoihin
  * kuin "txt" ja "md".
  */
-public interface Text {
+public interface TekstiRajapinta {
 
-    void setText(String teksti);
+    void setTeksti(String teksti);
 
-    String getText();
-    int getCharCount();
-    int getWordCount();
-    int getRowCount();
+    String getTeksti();
+    int getCharMaara();
+    int getSanaMaara();
+    int getRiviMaara();
 }

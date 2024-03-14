@@ -3,20 +3,20 @@ package net.samumoila.markdownapp;
 /**
  * Kuvastaa yksinkertaisinta mahdollista tekstiä, esimerkiksi txt-tiedostoon tallennettua.
  */
-public class TextSimple implements Text {
-    private String mainText;
-    private int charCount;
-    private int wordCount;
-    private int rowCount;
+public abstract class Teksti implements TekstiRajapinta {
+    private String paaTeksti;
+    private int charMaara;
+    private int sanaMaara;
+    private int riviMaara;
 
     /**
      * Oletusalustaja, jolla teksti on tyhjä.
      */
-    public TextSimple() {
-        this.mainText = "";
-        this.countChars();
-        this.countRows();
-        this.countWords();
+    public Teksti() {
+        this.paaTeksti = "";
+        this.laskeChar();
+        this.laskeRivit();
+        this.laskeSanat();
     }
 
     /**
@@ -24,15 +24,15 @@ public class TextSimple implements Text {
      *
      * @param teksti
      */
-    public TextSimple(String teksti) {
-        this.mainText = teksti;
-        this.countChars();
-        this.countRows();
-        this.countWords();
+    public Teksti(String teksti) {
+        this.paaTeksti = teksti;
+        this.laskeChar();
+        this.laskeRivit();
+        this.laskeSanat();
     }
 
-    private void countChars() {
-        this.charCount = this.mainText.length();
+    private void laskeChar() {
+        this.charMaara = this.paaTeksti.length();
     }
 
     /**
@@ -42,13 +42,13 @@ public class TextSimple implements Text {
      *  - Sana päättyy, jos tulee joku "white space"-merkki.
      *  - Sana päättyy, jos tulee kaksi erikoismerkkiä peräkkäin.
      */
-    private void countWords() {
+    private void laskeSanat() {
         int words = 0;
         boolean newWordStarted = false; // Onko tällä hetkellä sana kesken.
         boolean specialCharEncountered = false; // Oliko edellinen merkki erikoismerkki.
 
-        for (int i = 0; i < mainText.length(); i++) {
-            char comparisonChar = mainText.charAt(i);
+        for (int i = 0; i < paaTeksti.length(); i++) {
+            char comparisonChar = paaTeksti.charAt(i);
 
             if (!newWordStarted) {
                 if (Character.isLetterOrDigit(comparisonChar)) {
@@ -77,12 +77,12 @@ public class TextSimple implements Text {
                 }
             }
         }
-        this.wordCount = words;
+        this.sanaMaara = words;
     }
 
-    private void countRows() {
+    private void laskeRivit() {
         // https://stackoverflow.com/a/50631407
-        this.rowCount = (int) mainText.lines().count();
+        this.riviMaara = (int) paaTeksti.lines().count();
     }
 
     /**
@@ -90,11 +90,11 @@ public class TextSimple implements Text {
      *
      * @param teksti
      */
-    public void setText(String teksti) {
-        this.mainText = teksti;
-        this.countChars();
-        this.countRows();
-        this.countWords();
+    public void setTeksti(String teksti) {
+        this.paaTeksti = teksti;
+        this.laskeChar();
+        this.laskeRivit();
+        this.laskeSanat();
     }
 
     /**
@@ -102,8 +102,8 @@ public class TextSimple implements Text {
      *
      * @return
      */
-    public String getText() {
-        return this.mainText;
+    public String getTeksti() {
+        return this.paaTeksti;
     }
 
     /**
@@ -111,8 +111,8 @@ public class TextSimple implements Text {
      *
      * @return
      */
-    public int getCharCount() {
-        return this.charCount;
+    public int getCharMaara() {
+        return this.charMaara;
     }
 
     /**
@@ -120,8 +120,8 @@ public class TextSimple implements Text {
      *
      * @return
      */
-    public int getWordCount() {
-        return this.wordCount;
+    public int getSanaMaara() {
+        return this.sanaMaara;
     }
 
     /**
@@ -129,8 +129,8 @@ public class TextSimple implements Text {
      *
      * @return
      */
-    public int getRowCount() {
-        return this.rowCount;
+    public int getRiviMaara() {
+        return this.riviMaara;
     }
 
     /**
@@ -140,10 +140,10 @@ public class TextSimple implements Text {
      */
     @Override
     public String toString() {
-        String text = getText() +
-                "\nCharacter count:\t" + getCharCount() +
-                "\nRow count:\t\t\t" + getRowCount() +
-                "\nWord count:\t\t\t" + getWordCount();
+        String text = getTeksti() +
+                "\nCharacter count:\t" + getCharMaara() +
+                "\nRow count:\t\t\t" + getRiviMaara() +
+                "\nWord count:\t\t\t" + getSanaMaara();
         return text;
     }
 }

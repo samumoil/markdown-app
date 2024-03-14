@@ -19,3 +19,13 @@ https://www.geeksforgeeks.org/different-ways-reading-text-file-java/
 # 12.3. 
 6.30 - 7.30
 - Sain toimimaan TextSimple wordCount!
+
+9.00 - 11.00
+- Ensimmäinen versio käyttöliittymästä.
+- MenuBar
+
+# 14.3.
+21.00 - 
+- Tiedoston avausta ja tallennusta
+- FileChooser
+- Englanninkieliset asiat suomeksi
