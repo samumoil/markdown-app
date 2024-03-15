@@ -4,7 +4,8 @@ import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TextArea;
-import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.*;
+import javafx.scene.text.TextFlow;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
@@ -25,6 +26,10 @@ class KayttoLiittyma extends BorderPane {
     TextArea muokkausKentta = new TextArea();
     // Tämä teksti näkyy, jos kirjoituskenttä on tyhjä.
     String quickStartTeksti = "Try *text* for cursive, or **text** for bold. Get different headings with # or ##.";
+    // Oikealla näkyvä tekstialue. Näyttää "käsitellyn" tekstin.
+    TextFlow nayttoKentta = new TextFlow();
+    // Muuttuja muokkauskentän ja näyttökentän koon säätämiseen.
+    private double tekstialueidenKoko = 200;
 
     // Tiedostonsijainnin valitsija
     FileChooser tiedostonValitsija = new FileChooser();
@@ -37,18 +42,36 @@ class KayttoLiittyma extends BorderPane {
      * ja näin saadaan pidettyä oikea alustaja siistinä.
      */
     private void alustajaApuri() {
+        // Koko ikkunan minimikoko.
+        this.setMinSize(600,600);
+
+        // Liitetään yläosan valikoihin halutut asiat.
         menuTiedosto.getItems().addAll(avaaTiedosto, tallennaTiedosto, suljeSovellus);
         menuBar.getMenus().addAll(menuTiedosto);
-        muokkausKentta.setPromptText(quickStartTeksti);
-        this.setCenter(muokkausKentta);
         this.setTop(menuBar);
+
+        // Säädetään keskiosan tekstikentät.
+        muokkausKentta.setPromptText(quickStartTeksti);
+        muokkausKentta.setMinSize(tekstialueidenKoko, tekstialueidenKoko);
+        nayttoKentta.setMinSize(tekstialueidenKoko, tekstialueidenKoko);
+        // Laitetaan kaksi tekstikenttää HBox sisälle, jotta ne ovat tasavertaisia.
+        HBox keskiosa = new HBox(muokkausKentta, nayttoKentta);
+        this.paivitaKenttienKoko();
+        this.setCenter(keskiosa);
+
+        // Alustetaan tiedostonvalitsijat
         tiedostonValitsija.setTitle("Valitse tiedosto");
         tallennuksenValitsija.setTitle("Valitse tallennuspaikka");
-        // Mitä tiedostomuotoja tiedostonvalitsija näyttää?
+        // Mitä tiedostomuotoja tiedostonvalitsija näyttää? Malli otettu javan dokumentaatiosta.
         tiedostonValitsija.getExtensionFilters().addAll(
                 new FileChooser.ExtensionFilter("Text Files", "*.txt","*.md"),
                 new FileChooser.ExtensionFilter("All Files", "*.*")
         );
+    }
+
+    public void paivitaKenttienKoko() {
+        muokkausKentta.setPrefWidth(this.getWidth()/2);
+        nayttoKentta.setPrefWidth(this.getWidth()/2);
     }
 
     public KayttoLiittyma() {
@@ -105,4 +128,6 @@ class KayttoLiittyma extends BorderPane {
         }
         return tiedostoSijainti;
     }
+
+
 }

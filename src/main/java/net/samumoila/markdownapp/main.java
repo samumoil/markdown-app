@@ -14,22 +14,12 @@ public class main extends Application{
     KayttoLiittyma UI = new KayttoLiittyma();
     // Määritellään muistipaikka ja kutsumanimi käsiteltävälle tekstioliolle.
     static Teksti kasiteltavaTekstiOlio;
-    // Näihin muuttujiin sijoitetaan avattu TAI tallennettu tiedosto ja sen polku.
-    static File valittuTiedostoOlio;
+    // Tähän sijoitetaan avatun TAI tallennetun tiedoston tiedostopolku.
     static String valitunTiedostonPolku = "";
-    static String valittuKansio = "";
 
-
-    // TÄMÄ METODI POISTETAAN LOPULLISESTA VERSIOSTA
-    private static void testiAsioidenAlustusta() {
-        valitunTiedostonPolku = "";
-        // Luodaan testailua varten markdownteksti-olio.
-        //kasiteltavaTekstiOlio = new TekstiMarkdown(TiedostonKasittelija.lueTiedosto("README.md"));
-        kasiteltavaTekstiOlio = new TekstiMarkdown();
-
-    }
     public static void main(String[] args) {
-        testiAsioidenAlustusta();
+        // Luodaan yksi olio valmiiksi, ennen kuin on mitään muita avattu.
+        kasiteltavaTekstiOlio = new TekstiMarkdown();
         launch(args);
     }
     @Override
@@ -47,14 +37,20 @@ public class main extends Application{
         UI.tallennaTiedosto.setOnAction(e -> {
             kasiteltavaTekstiOlio.setTeksti(UI.getTeksti()); // Päivitetään teksti muokkauskentästä tekstioliolle.
             valitunTiedostonPolku = UI.kysyTallennusSijainti(primaryStage); // Tähän täytyy syöttää Stage, koska FileChooser tarvitsee
-            System.out.println("Saving to file: " + valitunTiedostonPolku);
+                System.out.println("Saving to file: " + valitunTiedostonPolku);
             TiedostonKasittelija.tallennaTiedosto(kasiteltavaTekstiOlio.getTeksti(), valitunTiedostonPolku);
         });
         UI.suljeSovellus.setOnAction(e -> {
             System.exit(0);
         });
 
-        Scene kehys = new Scene(UI, 600, 500);
+        // Seurataan ikkunan kokoa ja muutetaan tekstikenttien kokoa tarvittaessa.
+        // Idea muokattu täältä: https://stackoverflow.com/questions/38216268/how-to-listen-resize-event-of-stage-in-javafx
+        UI.widthProperty().addListener(e -> {
+            UI.paivitaKenttienKoko();
+        });
+
+        Scene kehys = new Scene(UI);
         primaryStage.setScene(kehys);
         primaryStage.setTitle("Markdown-app");
         primaryStage.show();

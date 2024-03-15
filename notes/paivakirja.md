@@ -25,7 +25,11 @@ https://www.geeksforgeeks.org/different-ways-reading-text-file-java/
 - MenuBar
 
 # 14.3.
-21.00 - 
+21.00 - 23.00 
 - Tiedoston avausta ja tallennusta
 - FileChooser
 - Englanninkieliset asiat suomeksi
+
+# 15.3.
+9.30 - 
+- Tekstikenttien koko ja reagointi ikkunan koon muutokseen.
