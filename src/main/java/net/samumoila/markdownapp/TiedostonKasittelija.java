@@ -18,9 +18,9 @@ class TiedostonKasittelija {
     public static String lueTiedosto(String tiedostoPolku) {
         String palautusTeksti = "";
         try {
-            palautusTeksti = new String(Files.readAllBytes(Paths.get(tiedostoPolku)));
-            // Tiedoston lukeminen on kopioitu tämän sivuston kohdasta 5:
+            // Tiedoston lukeminen on kopioitu tämän sivun kohdasta 5:
             // https://www.geeksforgeeks.org/different-ways-reading-text-file-java/
+            palautusTeksti = new String(Files.readAllBytes(Paths.get(tiedostoPolku)));
         } catch (Exception exception) {
             exception.printStackTrace();
         }

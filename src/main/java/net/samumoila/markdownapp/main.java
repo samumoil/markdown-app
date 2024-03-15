@@ -4,9 +4,6 @@ import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
-import java.io.File;
-import java.io.IOException;
-
 
 public class main extends Application{
 
@@ -26,6 +23,7 @@ public class main extends Application{
     public void start(Stage primaryStage) {
         // Laitetaan teksti näkyviin isoon kirjoituskenttään.
         UI.setTeksti(kasiteltavaTekstiOlio.getTeksti());
+        Markdownifier.muunnaMarkdown(kasiteltavaTekstiOlio.getTeksti(), UI.nayttoKentta);
 
         // VALIKOIDEN TOIMINNALLISUUDET:
         UI.avaaTiedosto.setOnAction(e -> {
@@ -48,6 +46,12 @@ public class main extends Application{
         // Idea muokattu täältä: https://stackoverflow.com/questions/38216268/how-to-listen-resize-event-of-stage-in-javafx
         UI.widthProperty().addListener(e -> {
             UI.paivitaKenttienKoko();
+        });
+
+        // Päivitetään tekstioliota ja näyttökenttää jokaisen näppäinpainalluksen jälkeen.
+        UI.muokkausKentta.setOnKeyTyped(e -> {
+            kasiteltavaTekstiOlio.setTeksti(UI.muokkausKentta.getText());
+            Markdownifier.muunnaMarkdown(kasiteltavaTekstiOlio.getTeksti(), UI.nayttoKentta);
         });
 
         Scene kehys = new Scene(UI);
