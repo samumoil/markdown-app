@@ -4,21 +4,21 @@ import org.commonmark.node.Node;
 import org.commonmark.parser.Parser;
 import org.commonmark.renderer.html.HtmlRenderer;
 
-public class markdownParser implements Runnable {
+public class MarkdownParser implements Runnable {
     // Nämä kolme riviä ovat lähes suoraan markdown-parserin ohjeesta
     // https://github.com/commonmark/commonmark-java?tab=readme-ov-file#parse-and-render-to-html
-
     private Parser parser = Parser.builder().build();
     private HtmlRenderer renderer = HtmlRenderer.builder().build();
     private Node document;
+
     private String html = "";
     private boolean renderKesken = false;
 
-    public markdownParser() {
+    public MarkdownParser() {
         this.document = parser.parse("");
     }
 
-    public markdownParser(String tekstiIn) {
+    public MarkdownParser(String tekstiIn) {
         this.document = parser.parse(tekstiIn);
     }
 

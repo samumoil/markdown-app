@@ -49,7 +49,7 @@ class KayttoLiittyma extends BorderPane {
     Text alapalkinStatus = new Text();
 
     // Luodaan valmiiksi markdownparseri
-    markdownParser markdownParserOlio = new markdownParser();
+    MarkdownParser markdownParserOlio = new MarkdownParser();
 
     /**
      * Asetetaan edellä luodut asiat paikoilleen. Tätä apumetodia kutsutaan varsinaisessa alustajassa
