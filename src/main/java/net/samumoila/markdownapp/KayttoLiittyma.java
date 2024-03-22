@@ -1,13 +1,15 @@
 package net.samumoila.markdownapp;
 
+import javafx.geometry.Insets;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TextArea;
 import javafx.scene.layout.*;
-import javafx.scene.text.TextFlow;
+import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import javafx.scene.web.WebView;
 
 import java.io.File;
 import java.io.IOException;
@@ -22,12 +24,14 @@ class KayttoLiittyma extends BorderPane {
     protected MenuItem tallennaTiedosto = new MenuItem("Tallenna");
     protected MenuItem suljeSovellus = new MenuItem("Sulje");
 
-    // Keskellä näkyvä iso kirjoituskenttä.
+    // Vasemmalla näkyvä iso kirjoituskenttä.
     TextArea muokkausKentta = new TextArea();
-    // Tämä teksti näkyy, jos kirjoituskenttä on tyhjä.
-    String quickStartTeksti = "Try *text* for cursive, or **text** for bold. Get different headings with # or ##.";
     // Oikealla näkyvä tekstialue. Näyttää "käsitellyn" tekstin.
-    TextFlow nayttoKentta = new TextFlow();
+    WebView nayttoKentta = new WebView();
+
+    // Tämä teksti näkyy oikealla, jos kirjoituskenttä on tyhjä.
+    String quickStartTeksti = "Try *text* for cursive, or **text** for bold. Get different headings with # or ##.";
+
     // Muuttuja muokkauskentän ja näyttökentän minimikoon säätämiseen.
     private double tekstialueidenKoko = 200;
 
@@ -36,6 +40,16 @@ class KayttoLiittyma extends BorderPane {
     FileChooser tallennuksenValitsija = new FileChooser();
     // Tiedostonvalitsijoille tiedostoOlio. Tarvitaan oletussijainnin määritykseen File-oliosta.
     File valittuTiedostoOlio = new File("");
+
+    // Alarivin palkki, jossa näytetään tietoja.
+    HBox alapalkki = new HBox(10);
+    Text merkkiMaaraTeksti = new Text();
+    Text sanaMaaraTeksti = new Text();
+    Text riviMaaraTeksti = new Text();
+    Text alapalkinStatus = new Text();
+
+    // Luodaan valmiiksi markdownparseri
+    markdownParser markdownParserOlio = new markdownParser();
 
     /**
      * Asetetaan edellä luodut asiat paikoilleen. Tätä apumetodia kutsutaan varsinaisessa alustajassa
@@ -58,6 +72,12 @@ class KayttoLiittyma extends BorderPane {
         HBox keskiosa = new HBox(muokkausKentta, nayttoKentta);
         this.paivitaKenttienKoko();
         this.setCenter(keskiosa);
+
+        // Alapalkin säädöt
+        alapalkki.setPadding(new Insets(5, 5, 5, 5));
+        this.paivitaAlapalkki(0, 0, 0);
+        alapalkki.getChildren().addAll(merkkiMaaraTeksti, sanaMaaraTeksti, riviMaaraTeksti, alapalkinStatus);
+        this.setBottom(alapalkki);
 
         // Alustetaan tiedostonvalitsijat
         tiedostonValitsija.setTitle("Valitse tiedosto");
@@ -155,5 +175,27 @@ class KayttoLiittyma extends BorderPane {
     public void paivitaKenttienKoko() {
         muokkausKentta.setPrefWidth(this.getWidth()/2);
         nayttoKentta.setPrefWidth(this.getWidth()/2);
+    }
+
+    public void naytaKasiteltyTeksti(String tekstiIn) {
+        // Ei tehdä mitään, jos edellinen renderöinti on vielä kesken.
+        if (!markdownParserOlio.getRenderKesken()) {
+            markdownParserOlio.setText(tekstiIn);
+            // Asetetaan renderöinti pyörimään eri säikeeseen, jotta kuormitus tasoittuu.
+            Thread saie = new Thread(() -> markdownParserOlio.run());
+            saie.start();
+            // Syötetään markdown-parserin tuottama HTML-koodi suoraan WebView näkymään.
+            this.nayttoKentta.getEngine().loadContent(markdownParserOlio.getHtml());
+        }
+    }
+
+    public void paivitaAlapalkki(int charMaara, int sanaMaara, int riviMaara) {
+        this.merkkiMaaraTeksti.setText("Merkkejä: " + charMaara);
+        this.sanaMaaraTeksti.setText("Sanoja: " + sanaMaara);
+        this.riviMaaraTeksti.setText("Rivejä: " + riviMaara);
+    }
+
+    public void setAlapalkinStatus(String statusTeksti) {
+        this.alapalkinStatus.setText(statusTeksti);
     }
 }

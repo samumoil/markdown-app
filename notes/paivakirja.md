@@ -31,5 +31,17 @@ https://www.geeksforgeeks.org/different-ways-reading-text-file-java/
 - Englanninkieliset asiat suomeksi
 
 # 15.3.
-9.30 - 
+9.30 - 12.00
 - Tekstikenttien koko ja reagointi ikkunan koon muutokseen.
+
+# 21.3.
+8.30 - 9.30
+- Yritetty saada omaa markdown toimintalogiikkaa toimimaan.
+
+# 22.3.
+8.30 - 12.30 = 4h
+- Hylätty oman logiikan käyttö ja etsitty sopivaa valmista parseria.
+- Otetaan käyttöön https://github.com/commonmark/commonmark-java
+- Päivitetty pom.xml and module-info.java sisältämään vaadittavat rivit.
+- Markdown-logiikka toimii nyt oikein.
+- Luotu säikeitä hyödyntävä markdown-renderöinti.

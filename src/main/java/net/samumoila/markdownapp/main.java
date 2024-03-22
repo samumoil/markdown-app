@@ -2,8 +2,10 @@ package net.samumoila.markdownapp;
 
 import javafx.application.Application;
 import javafx.scene.Scene;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyCodeCombination;
+import javafx.scene.input.KeyCombination;
 import javafx.stage.Stage;
-
 
 public class main extends Application{
 
@@ -23,24 +25,26 @@ public class main extends Application{
     public void start(Stage primaryStage) {
         // Laitetaan teksti näkyviin isoon kirjoituskenttään.
         UI.setTeksti(kasiteltavaTekstiOlio.getTeksti());
-        Markdownifier.muunnaMarkdown(kasiteltavaTekstiOlio.getTeksti(), UI.nayttoKentta);
+        UI.naytaKasiteltyTeksti(kasiteltavaTekstiOlio.getTeksti());
 
         // VALIKOIDEN TOIMINNALLISUUDET:
         UI.avaaTiedosto.setOnAction(e -> {
-            valitunTiedostonPolku = UI.kysyAvausSijainti(primaryStage); // Tähän täytyy syöttää Stage, koska FileChooser tarvitsee
-            System.out.println("Opening file: " + valitunTiedostonPolku);
-            kasiteltavaTekstiOlio.setTeksti(TiedostonKasittelija.lueTiedosto(valitunTiedostonPolku));
-            UI.setTeksti(kasiteltavaTekstiOlio.getTeksti());
+            this.avaaTiedosto(primaryStage);
         });
         UI.tallennaTiedosto.setOnAction(e -> {
-            kasiteltavaTekstiOlio.setTeksti(UI.getTeksti()); // Päivitetään teksti muokkauskentästä tekstioliolle.
-            valitunTiedostonPolku = UI.kysyTallennusSijainti(primaryStage); // Tähän täytyy syöttää Stage, koska FileChooser tarvitsee
-                System.out.println("Saving to file: " + valitunTiedostonPolku);
-            TiedostonKasittelija.tallennaTiedosto(kasiteltavaTekstiOlio.getTeksti(), valitunTiedostonPolku);
+            this.tallennaTiedostoon(primaryStage);
         });
         UI.suljeSovellus.setOnAction(e -> {
             System.exit(0);
         });
+
+        // PIKANÄPPÄINTEN TOIMINNALLISUUDET
+        // Kopioitu kohdasta "Using accelerator"
+        // https://medium.com/@zoha131/handling-keyboard-shortcuts-in-javafx-2972ba950a48
+        KeyCombination pikaAvaa = new KeyCodeCombination(KeyCode.O, KeyCombination.CONTROL_DOWN);
+        Runnable runnableAvaa = ()-> this.avaaTiedosto(primaryStage);
+        KeyCombination pikaTallenna = new KeyCodeCombination(KeyCode.S, KeyCombination.CONTROL_DOWN);
+        Runnable runnableTallenna = ()-> this.tallennaTiedostoon(primaryStage);
 
         // Seurataan ikkunan kokoa ja muutetaan tekstikenttien kokoa tarvittaessa.
         // Idea muokattu täältä: https://stackoverflow.com/questions/38216268/how-to-listen-resize-event-of-stage-in-javafx
@@ -51,12 +55,37 @@ public class main extends Application{
         // Päivitetään tekstioliota ja näyttökenttää jokaisen näppäinpainalluksen jälkeen.
         UI.muokkausKentta.setOnKeyTyped(e -> {
             kasiteltavaTekstiOlio.setTeksti(UI.muokkausKentta.getText());
-            Markdownifier.muunnaMarkdown(kasiteltavaTekstiOlio.getTeksti(), UI.nayttoKentta);
+            UI.naytaKasiteltyTeksti(kasiteltavaTekstiOlio.getTeksti());
+            UI.paivitaAlapalkki(kasiteltavaTekstiOlio.getCharMaara(), kasiteltavaTekstiOlio.getSanaMaara(), kasiteltavaTekstiOlio.getRiviMaara());
+            UI.setAlapalkinStatus(""); // Tyhjennetään status.
         });
 
         Scene kehys = new Scene(UI);
+
+        // Kopioitu, katso ylempänä "pikanäppäinten toiminnallisuudet".
+        kehys.getAccelerators().put(pikaAvaa, runnableAvaa);
+        kehys.getAccelerators().put(pikaTallenna, runnableTallenna);
+
         primaryStage.setScene(kehys);
         primaryStage.setTitle("Markdown-app");
         primaryStage.show();
     }
+
+    private void tallennaTiedostoon(Stage primaryStage) {
+        kasiteltavaTekstiOlio.setTeksti(UI.getTeksti()); // Päivitetään teksti muokkauskentästä tekstioliolle.
+        valitunTiedostonPolku = UI.kysyTallennusSijainti(primaryStage); // Tähän täytyy syöttää Stage, koska FileChooser tarvitsee
+        System.out.println("Saving to file: " + valitunTiedostonPolku);
+        TiedostonKasittelija.tallennaTiedosto(kasiteltavaTekstiOlio.getTeksti(), valitunTiedostonPolku);
+        UI.setAlapalkinStatus("Tallennettu tiedostoon: " + valitunTiedostonPolku);
+    }
+
+    private void avaaTiedosto(Stage primaryStage) {
+        valitunTiedostonPolku = UI.kysyAvausSijainti(primaryStage); // Tähän täytyy syöttää Stage, koska FileChooser tarvitsee
+        System.out.println("Opening file: " + valitunTiedostonPolku);
+        kasiteltavaTekstiOlio.setTeksti(TiedostonKasittelija.lueTiedosto(valitunTiedostonPolku));
+        UI.setTeksti(kasiteltavaTekstiOlio.getTeksti());
+        UI.naytaKasiteltyTeksti(kasiteltavaTekstiOlio.getTeksti());
+        UI.setAlapalkinStatus("Ladattu tiedosto: " + valitunTiedostonPolku);
+    }
+
 }
