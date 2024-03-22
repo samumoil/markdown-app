@@ -182,6 +182,7 @@ class KayttoLiittyma extends BorderPane {
         if (!markdownParserOlio.getRenderKesken()) {
             markdownParserOlio.setText(tekstiIn);
             // Asetetaan renderöinti pyörimään eri säikeeseen, jotta kuormitus tasoittuu.
+            // Syntaksi kopioitu https://stackoverflow.com/a/5853198
             Thread saie = new Thread(() -> markdownParserOlio.run());
             saie.start();
             // Syötetään markdown-parserin tuottama HTML-koodi suoraan WebView näkymään.
