@@ -54,5 +54,9 @@ https://www.geeksforgeeks.org/different-ways-reading-text-file-java/
 - Muita pikkusäätöjä ja logiikan parantamista.
 
 # 25.3.
-11.30 - 
+11.30 - 14.30 = 3h
+- Lisätty dokumentaatiota.
+- Korjattu renderöinnin "lagi". Tuli uusi ongelma tilalle, kun tervetuloteksti ei näy.
+- Katsottu ja kommentoitu toisen opiskelijan ohjelmaa.
+- Aloitettu käymään läpi muuttujia ja muutettu niitä private/protected.
 

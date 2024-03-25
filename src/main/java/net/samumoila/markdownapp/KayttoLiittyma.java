@@ -236,6 +236,13 @@ class KayttoLiittyma extends BorderPane {
             Thread saie = new Thread(() -> markdownParserOlio.run());
             saie.start();
 
+            // Odotetaan, että säie suorittaa renderöinnin.
+            try {
+                saie.join();
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+
             // Syötetään markdown-parserin tuottama HTML-koodi suoraan WebView näkymään.
             this.nayttoKentta.getEngine().loadContent(markdownParserOlio.getHtml());
         }
