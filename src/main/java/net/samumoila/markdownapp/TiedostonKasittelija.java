@@ -9,7 +9,9 @@ import java.nio.file.Paths;
  * Lukee tiedoston tiedostopolusta ja palauttaa sen sisällön String-oliona.
  */
 class TiedostonKasittelija {
+
     /**
+     * Palauttaa annetussa tiedostopolussa sijaitsevan tiedoston sisällön String-oliona.
      *
      * @param tiedostoPolku
      * @return String-olio
@@ -26,11 +28,13 @@ class TiedostonKasittelija {
         }
         return palautusTeksti;
     }
-    /*
-    Tähän luodaan virheenhallinta. Palauttaa eri virhekoodeilla tiedon pääohjelmaan, mikä meni pieleen.
+
+    /**
+     * Tallettaa annetun String-olion tekstitiedostona annettuun tiedostopolkuun.
+     *
+     * @param tallennettavaTeksti
+     * @param tiedostoPolku
      */
-
-
     public static void tallennaTiedosto (String tallennettavaTeksti, String tiedostoPolku) {
         try {
             PrintWriter kirjoittaja = new PrintWriter(tiedostoPolku);

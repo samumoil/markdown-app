@@ -31,6 +31,9 @@ public abstract class Teksti implements TekstiRajapinta {
         this.laskeSanat();
     }
 
+    /**
+     * Lasketaan tekstissä olevien merkkien määrä.
+     */
     private void laskeChar() {
         this.charMaara = this.paaTeksti.length();
     }
@@ -58,7 +61,6 @@ public abstract class Teksti implements TekstiRajapinta {
                     words++;
                 }
             } else { // Sana on siis kesken.
-                System.out.println(comparisonChar);
                 if (Character.isWhitespace(comparisonChar)) {
                     // Sana päättyy välilyöntiin ja muihin white space -merkkeihin.
                     newWordStarted = false;
@@ -80,6 +82,9 @@ public abstract class Teksti implements TekstiRajapinta {
         this.sanaMaara = words;
     }
 
+    /**
+     * Lasketaan tekstin rivien määrä.
+     */
     private void laskeRivit() {
         // https://stackoverflow.com/a/50631407
         this.riviMaara = (int) paaTeksti.lines().count();
@@ -141,6 +146,7 @@ public abstract class Teksti implements TekstiRajapinta {
     @Override
     public String toString() {
         String text = getTeksti() +
+                "\n" +
                 "\nCharacter count:\t" + getCharMaara() +
                 "\nRow count:\t\t\t" + getRiviMaara() +
                 "\nWord count:\t\t\t" + getSanaMaara();

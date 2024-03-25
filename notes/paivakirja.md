@@ -45,3 +45,14 @@ https://www.geeksforgeeks.org/different-ways-reading-text-file-java/
 - Päivitetty pom.xml and module-info.java sisältämään vaadittavat rivit.
 - Markdown-logiikka toimii nyt oikein.
 - Luotu säikeitä hyödyntävä markdown-renderöinti.
+
+# 24.3.
+18.00 - 20.00 = 2h
+- Lisätty dokumentaatiota.
+- Löydetty ja poistettu system.out.println joka aiheutti tekstin tulostuksen komentoriville.
+- Hienosäädetty avaus- ja tallennusikkunoiden asioita. Vielä kesken.
+- Muita pikkusäätöjä ja logiikan parantamista.
+
+# 25.3.
+11.30 - 
+

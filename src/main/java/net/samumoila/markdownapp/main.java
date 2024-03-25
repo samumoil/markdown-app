@@ -11,8 +11,10 @@ public class main extends Application{
 
     // Alustetaan käyttöliittymä.
     KayttoLiittyma UI = new KayttoLiittyma();
+
     // Määritellään muistipaikka ja kutsumanimi käsiteltävälle tekstioliolle.
     static Teksti kasiteltavaTekstiOlio;
+
     // Tähän sijoitetaan avatun TAI tallennetun tiedoston tiedostopolku.
     static String valitunTiedostonPolku = "";
 
@@ -23,9 +25,6 @@ public class main extends Application{
     }
     @Override
     public void start(Stage primaryStage) {
-        // Laitetaan teksti näkyviin isoon kirjoituskenttään.
-        UI.setTeksti(kasiteltavaTekstiOlio.getTeksti());
-        UI.naytaKasiteltyTeksti(kasiteltavaTekstiOlio.getTeksti());
 
         // VALIKOIDEN TOIMINNALLISUUDET:
         UI.avaaTiedosto.setOnAction(e -> {
@@ -54,15 +53,16 @@ public class main extends Application{
 
         // Päivitetään tekstioliota ja näyttökenttää jokaisen näppäinpainalluksen jälkeen.
         UI.muokkausKentta.setOnKeyTyped(e -> {
-            kasiteltavaTekstiOlio.setTeksti(UI.muokkausKentta.getText());
-            UI.naytaKasiteltyTeksti(kasiteltavaTekstiOlio.getTeksti());
+            kasiteltavaTekstiOlio.setTeksti(UI.getTeksti());
+            UI.naytaTekstiKasiteltyna();
             UI.paivitaAlapalkki(kasiteltavaTekstiOlio.getCharMaara(), kasiteltavaTekstiOlio.getSanaMaara(), kasiteltavaTekstiOlio.getRiviMaara());
             UI.setAlapalkinStatus(""); // Tyhjennetään status.
         });
 
+        // Luodaan kehys tässä vaiheessa, koska seuraavaksi pikanäppäimet tarvitsevat sitä.
         Scene kehys = new Scene(UI);
 
-        // Kopioitu, katso ylempänä "pikanäppäinten toiminnallisuudet".
+        // Kopioitu netistä, katso ylempänä "pikanäppäinten toiminnallisuudet".
         kehys.getAccelerators().put(pikaAvaa, runnableAvaa);
         kehys.getAccelerators().put(pikaTallenna, runnableTallenna);
 
@@ -71,21 +71,26 @@ public class main extends Application{
         primaryStage.show();
     }
 
+    private void avaaTiedosto(Stage primaryStage) {
+        valitunTiedostonPolku = UI.kysyAvausSijainti(primaryStage); // Tähän täytyy syöttää Stage, koska FileChooser tarvitsee
+        // Jos käyttäjä valitsi sijainnin, avataan tiedosto.
+        if (!valitunTiedostonPolku.equals("")) {
+            System.out.println("Opening file: " + valitunTiedostonPolku);
+            kasiteltavaTekstiOlio.setTeksti(TiedostonKasittelija.lueTiedosto(valitunTiedostonPolku));
+            UI.setTeksti(kasiteltavaTekstiOlio.getTeksti());
+            UI.setAlapalkinStatus("Ladattu tiedosto: " + valitunTiedostonPolku);
+        }
+    }
+
     private void tallennaTiedostoon(Stage primaryStage) {
         kasiteltavaTekstiOlio.setTeksti(UI.getTeksti()); // Päivitetään teksti muokkauskentästä tekstioliolle.
         valitunTiedostonPolku = UI.kysyTallennusSijainti(primaryStage); // Tähän täytyy syöttää Stage, koska FileChooser tarvitsee
-        System.out.println("Saving to file: " + valitunTiedostonPolku);
-        TiedostonKasittelija.tallennaTiedosto(kasiteltavaTekstiOlio.getTeksti(), valitunTiedostonPolku);
-        UI.setAlapalkinStatus("Tallennettu tiedostoon: " + valitunTiedostonPolku);
-    }
-
-    private void avaaTiedosto(Stage primaryStage) {
-        valitunTiedostonPolku = UI.kysyAvausSijainti(primaryStage); // Tähän täytyy syöttää Stage, koska FileChooser tarvitsee
-        System.out.println("Opening file: " + valitunTiedostonPolku);
-        kasiteltavaTekstiOlio.setTeksti(TiedostonKasittelija.lueTiedosto(valitunTiedostonPolku));
-        UI.setTeksti(kasiteltavaTekstiOlio.getTeksti());
-        UI.naytaKasiteltyTeksti(kasiteltavaTekstiOlio.getTeksti());
-        UI.setAlapalkinStatus("Ladattu tiedosto: " + valitunTiedostonPolku);
+        // Jos käyttäjä valitsi sijainnin, tallennetaan tiedosto.
+        if (!valitunTiedostonPolku.equals("")) {
+            System.out.println("Saving to file: " + valitunTiedostonPolku);
+            TiedostonKasittelija.tallennaTiedosto(kasiteltavaTekstiOlio.getTeksti(), valitunTiedostonPolku);
+            UI.setAlapalkinStatus("Tallennettu tiedostoon: " + valitunTiedostonPolku);
+        }
     }
 
 }
