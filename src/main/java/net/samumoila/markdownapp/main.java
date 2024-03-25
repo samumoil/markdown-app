@@ -10,13 +10,13 @@ import javafx.stage.Stage;
 public class main extends Application{
 
     // Alustetaan käyttöliittymä.
-    KayttoLiittyma UI = new KayttoLiittyma();
+    private KayttoLiittyma UI = new KayttoLiittyma();
 
     // Määritellään muistipaikka ja kutsumanimi käsiteltävälle tekstioliolle.
-    static Teksti kasiteltavaTekstiOlio;
+    private static Teksti kasiteltavaTekstiOlio;
 
     // Tähän sijoitetaan avatun TAI tallennetun tiedoston tiedostopolku.
-    static String valitunTiedostonPolku = "";
+    private static String valitunTiedostonPolku = "";
 
     public static void main(String[] args) {
         // Luodaan yksi olio valmiiksi, ennen kuin on mitään muita avattu.
@@ -56,7 +56,7 @@ public class main extends Application{
             kasiteltavaTekstiOlio.setTeksti(UI.getTeksti());
             UI.naytaTekstiKasiteltyna();
             UI.paivitaAlapalkki(kasiteltavaTekstiOlio.getCharMaara(), kasiteltavaTekstiOlio.getSanaMaara(), kasiteltavaTekstiOlio.getRiviMaara());
-            UI.setAlapalkinStatus(""); // Tyhjennetään status.
+            UI.setAlapalkinStatus(""); // Tyhjennetään status, jos siellä on vaikka tallennuksen kuittaus.
         });
 
         // Luodaan kehys tässä vaiheessa, koska seuraavaksi pikanäppäimet tarvitsevat sitä.
@@ -92,5 +92,4 @@ public class main extends Application{
             UI.setAlapalkinStatus("Tallennettu tiedostoon: " + valitunTiedostonPolku);
         }
     }
-
 }

@@ -19,44 +19,44 @@ import java.io.IOException;
  */
 class KayttoLiittyma extends BorderPane {
     // Luodaan ylälaidan palkki, johon liitetään eri valikot.
-    MenuBar menuBar = new MenuBar();
+    private MenuBar menuBar = new MenuBar();
 
     // Yläpalkin ensimmäinen valikko ja sen alta löytyvät valinnat.
-    Menu menuTiedosto = new Menu("Tiedosto");
+    private Menu menuTiedosto = new Menu("Tiedosto");
     protected MenuItem avaaTiedosto = new MenuItem("Avaa tiedosto...");
     protected MenuItem tallennaTiedosto = new MenuItem("Tallenna");
     protected MenuItem suljeSovellus = new MenuItem("Sulje");
 
     // Vasemmalla näkyvä iso kirjoituskenttä.
-    TextArea muokkausKentta = new TextArea();
+    protected TextArea muokkausKentta = new TextArea();
     // Oikealla näkyvä tekstialue. Näyttää "käsitellyn" tekstin.
-    WebView nayttoKentta = new WebView();
+    private WebView nayttoKentta = new WebView();
 
     // Tämä teksti näkyy kirjoituskentässä, jos se on tyhjä eikä se ole aktiivisena.
-    String quickStartTeksti = "Kokeile *teksti* kursiiville tai **teksti** tummennetulle tekstille. " +
+    private String quickStartTeksti = "Kokeile *teksti* kursiiville tai **teksti** tummennetulle tekstille. " +
             "Erilaisia otsikoita saa # tai ##... -merkeillä";
     // Tervetulotoivotus, joka näkyy näyttökentässä oikealla ohjelman käynnistyessä.
-    String tervetuloTeksti = "# Tervetuloa käyttämään Markdown-appia!\n" +
+    private String tervetuloTeksti = "# Tervetuloa käyttämään Markdown-appia!\n" +
             "\n" +
             "Tällä ohjelmalla on tarkoitus muokata ja katsoa markdown-tiedostoja (*.md).\n" +
             "\n" +
             "Voit käyttää tunnettuja pikanäppäimiä ***ctrl+o*** ja ***ctrl+s***.";
 
-    // Tiedostonsijainnin valitsijat
-    FileChooser tiedostonValitsija = new FileChooser();
-    FileChooser tallennuksenValitsija = new FileChooser();
-    // Tiedostonvalitsijoille tiedostoOlio. Tarvitaan oletussijainnin määritykseen File-oliosta.
-    File valittuTiedostoOlio = new File("");
+    // Tiedostonsijainnin valitsija
+    private FileChooser tiedostonValitsija = new FileChooser();
+
+    // Tiedostonvalitsijalle tiedostoOlio. Tarvitaan oletussijainnin määritykseen File-oliosta.
+    private File valittuTiedostoOlio = new File("");
 
     // Alarivin palkki, jossa näytetään tietoja.
-    HBox alapalkki = new HBox(10);
-    Text merkkiMaaraTeksti = new Text();
-    Text sanaMaaraTeksti = new Text();
-    Text riviMaaraTeksti = new Text();
-    Text alapalkinStatus = new Text();
+    private HBox alapalkki = new HBox(10);
+    private Text merkkiMaaraTeksti = new Text();
+    private Text sanaMaaraTeksti = new Text();
+    private Text riviMaaraTeksti = new Text();
+    private Text alapalkinStatus = new Text();
 
     // Luodaan valmiiksi markdownparseri ja syötetään sille tervetuloteksti.
-    MarkdownParser markdownParserOlio = new MarkdownParser(tervetuloTeksti);
+    private MarkdownParser markdownParserOlio = new MarkdownParser(tervetuloTeksti);
 
     /**
      * Asetetaan edellä luodut asiat paikoilleen. Tätä apumetodia kutsutaan varsinaisessa alustajassa
@@ -89,7 +89,7 @@ class KayttoLiittyma extends BorderPane {
 
         // Alustetaan tiedostonvalitsijat
         tiedostonValitsija.setTitle("Valitse tiedosto");
-        tallennuksenValitsija.setTitle("Valitse tallennuspaikka");
+        tiedostonValitsija.setTitle("Valitse tallennuspaikka");
         // Mitä tiedostomuotoja tiedostonvalitsija näyttää? Malli otettu javafx:n dokumentaatiosta.
         tiedostonValitsija.getExtensionFilters().addAll(
                 new FileChooser.ExtensionFilter("Text Files", "*.txt","*.md"),
@@ -109,11 +109,11 @@ class KayttoLiittyma extends BorderPane {
     /**
      * Alustaja, jolle voidaan syöttää aloitusteksti.
      *
-     * @param text
+     * @param tekstiIn
      */
-    public KayttoLiittyma(String text) {
+    public KayttoLiittyma(String tekstiIn) {
         this.alustajaApuri();
-        muokkausKentta.setText(text);
+        muokkausKentta.setText(tekstiIn);
         // Ajetaan renderöinti kerran, jotta saadaan haluttu aloitusteksti suoraan näkyviin oikealle puolelle.
         markdownParserOlio.run();
     }
@@ -185,17 +185,17 @@ class KayttoLiittyma extends BorderPane {
         String tiedostoSijainti = "";
 
         if (valittuTiedostoOlio.length() > 0) {
-            // Asetetaan oletuskansio, jos meillä on jo jokin tiedostosijainti tiedossa.
+            // Asetetaan oletuskansio ja oletustiedosto, jos meillä on jo jokin tiedostosijainti tiedossa.
             try {
-                this.tallennuksenValitsija.setInitialFileName(valittuTiedostoOlio.getCanonicalPath());
-                System.out.println(valittuTiedostoOlio.getCanonicalFile().getParent());
+                this.tiedostonValitsija.setInitialFileName(valittuTiedostoOlio.getCanonicalPath());
+                this.tiedostonValitsija.setInitialDirectory(new File(valittuTiedostoOlio.getCanonicalFile().getParent()));
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
         }
 
         // Tässä tapahtuu käyttäjältä tiedustelu. Talletetaan valinta väliaikaiseen olioon.
-        File valinta = this.tallennuksenValitsija.showOpenDialog(primaryStage);
+        File valinta = this.tiedostonValitsija.showSaveDialog(primaryStage);
 
         // Tarkistetaan tekikö käyttäjä oikeasti valinnan vai poistuiko valintaikkunasta.
         // Jos valintaikkunasta poistutaan perumalla, "valinta" on null. Tätä emme halua kopioida tietona.
@@ -210,38 +210,55 @@ class KayttoLiittyma extends BorderPane {
                 throw new RuntimeException(e);
             }
         }
-
         return tiedostoSijainti;
     }
 
     /**
      * Päivittää muokkaus- ja näyttökenttien leveyden vastaamaan puolta
-     * koko ikkunan leveydestä.
+     * koko ikkunan leveydestä. Tämä aktivoidaan aina, kun ikkunan kokoa muutetaan.
      */
     public void paivitaKenttienKoko() {
         muokkausKentta.setPrefWidth(this.getWidth()/2);
         nayttoKentta.setPrefWidth(this.getWidth()/2);
     }
 
+    /**
+     * Syöttää muokkauskentän tekstin markdown-parserille, luo uuden säikeen ja ajaa parserin siinä.
+     * Lopuksi syöttää parserin tuottaman html-stringin näyttökenttään.
+     */
     public void naytaTekstiKasiteltyna() {
         // Ei tehdä mitään, jos edellinen renderöinti on vielä kesken.
         if (!markdownParserOlio.getRenderKesken()) {
             markdownParserOlio.setText(this.getTeksti());
             // Asetetaan renderöinti pyörimään eri säikeeseen, jotta kuormitus tasoittuu.
             // Syntaksi kopioitu https://stackoverflow.com/a/5853198
+
             Thread saie = new Thread(() -> markdownParserOlio.run());
             saie.start();
+
             // Syötetään markdown-parserin tuottama HTML-koodi suoraan WebView näkymään.
             this.nayttoKentta.getEngine().loadContent(markdownParserOlio.getHtml());
         }
     }
 
+    /**
+     * Päivittää alapalkissa näkyvät laskurit annetuilla lukumäärillä.
+     *
+     * @param charMaara
+     * @param sanaMaara
+     * @param riviMaara
+     */
     public void paivitaAlapalkki(int charMaara, int sanaMaara, int riviMaara) {
         this.merkkiMaaraTeksti.setText("Merkkejä: " + charMaara);
         this.sanaMaaraTeksti.setText("Sanoja: " + sanaMaara);
         this.riviMaaraTeksti.setText("Rivejä: " + riviMaara);
     }
 
+    /**
+     * Päivittää alapalkin status-kenttään annetun tekstin.
+     *
+     * @param statusTeksti
+     */
     public void setAlapalkinStatus(String statusTeksti) {
         this.alapalkinStatus.setText(statusTeksti);
     }
