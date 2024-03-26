@@ -1,7 +1,7 @@
 package net.samumoila.markdownapp;
 
 /**
- * Kuvastaa yksinkertaisinta mahdollista tekstiä, esimerkiksi txt-tiedostoon tallennettua.
+ * Abstrakti luokka, joka kuvastaa yksinkertaisinta mahdollista tekstiä, esimerkiksi txt-tiedostoon tallennettua.
  */
 public abstract class Teksti implements TekstiRajapinta {
     private String paaTeksti;
@@ -20,9 +20,9 @@ public abstract class Teksti implements TekstiRajapinta {
     }
 
     /**
-     * Alustaa tekstin annetulla String-oliolla. Käytetään tiedostostalukemisen yhteydessä.
+     * Alustaa tekstolion annetulla String-oliolla. Käytetään tiedostostalukemisen yhteydessä.
      *
-     * @param teksti
+     * @param teksti Tekstioliolle syötettävä teksti String-oliona.
      */
     public Teksti(String teksti) {
         this.paaTeksti = teksti;
@@ -46,54 +46,54 @@ public abstract class Teksti implements TekstiRajapinta {
      *  - Sana päättyy, jos tulee kaksi erikoismerkkiä peräkkäin.
      */
     private void laskeSanat() {
-        int words = 0;
-        boolean newWordStarted = false; // Onko tällä hetkellä sana kesken.
-        boolean specialCharEncountered = false; // Oliko edellinen merkki erikoismerkki.
+        int sanat = 0;
+        boolean uusiSanaAloitettu = false; // Onko tällä hetkellä sana kesken.
+        boolean erikoismerkkiKohdattu = false; // Oliko edellinen merkki erikoismerkki.
 
         for (int i = 0; i < paaTeksti.length(); i++) {
             char comparisonChar = paaTeksti.charAt(i);
 
-            if (!newWordStarted) {
+            if (!uusiSanaAloitettu) {
                 if (Character.isLetterOrDigit(comparisonChar)) {
                     // Jos uusi sana ei vielä ollut kesken ja tarkasteltava merkki on kirjain tai numero,
                     // aloitetaan sana ja lisätään sanalaskuria.
-                    newWordStarted = true;
-                    words++;
+                    uusiSanaAloitettu = true;
+                    sanat++;
                 }
             } else { // Sana on siis kesken.
                 if (Character.isWhitespace(comparisonChar)) {
                     // Sana päättyy välilyöntiin ja muihin white space -merkkeihin.
-                    newWordStarted = false;
-                    specialCharEncountered = false;
+                    uusiSanaAloitettu = false;
+                    erikoismerkkiKohdattu = false;
                 } else if (!Character.isLetterOrDigit(comparisonChar)) {
-                    if (!specialCharEncountered) {
+                    if (!erikoismerkkiKohdattu) {
                         // Kohdataan ensimmäinen erikoismerkki. Sana ei vielä pääty.
-                        specialCharEncountered = true;
+                        erikoismerkkiKohdattu = true;
                     } else {
                         // Kohdataan toinen erikoismerkki, sana päättyy.
-                        specialCharEncountered = false;
-                        newWordStarted = false;
+                        erikoismerkkiKohdattu = false;
+                        uusiSanaAloitettu = false;
                     }
                 } else {
                     // Kohdattu merkki on siis kirjain tai numero. Ei tehdä mitään ja annetaan sanan jatkua.
                 }
             }
         }
-        this.sanaMaara = words;
+        this.sanaMaara = sanat;
     }
 
     /**
      * Lasketaan tekstin rivien määrä.
      */
     private void laskeRivit() {
-        // https://stackoverflow.com/a/50631407
+        // Idea saatu täältä https://stackoverflow.com/a/50631407
         this.riviMaara = (int) paaTeksti.lines().count();
     }
 
     /**
      * Asetetaan uusi tekstiolion teksti. Päivitetään samalla laskurit,
      *
-     * @param teksti
+     * @param teksti String-oliona annettu teksti, joka päivittyy tekstiolion tekstiksi.
      */
     public void setTeksti(String teksti) {
         this.paaTeksti = teksti;
@@ -105,7 +105,7 @@ public abstract class Teksti implements TekstiRajapinta {
     /**
      * Palautetaan tekstiolion teksti String-oliona.
      *
-     * @return
+     * @return Tekstiolion sisältämä teksti String-oliona.
      */
     public String getTeksti() {
         return this.paaTeksti;
@@ -114,7 +114,7 @@ public abstract class Teksti implements TekstiRajapinta {
     /**
      * Palautetaan tekstin merkkimäärä.
      *
-     * @return
+     * @return Tekstin merkkimäärä int-muuttujana.
      */
     public int getCharMaara() {
         return this.charMaara;
@@ -123,7 +123,7 @@ public abstract class Teksti implements TekstiRajapinta {
     /**
      * Palautetaan tekstin sanamäärä.
      *
-     * @return
+     * @return Tekstin sanamäärä int-muuttajana.
      */
     public int getSanaMaara() {
         return this.sanaMaara;
@@ -132,7 +132,7 @@ public abstract class Teksti implements TekstiRajapinta {
     /**
      * Palautetaan tekstin rivimäärä.
      *
-     * @return
+     * @return Tekstin rivimäärä int-muuttujana.
      */
     public int getRiviMaara() {
         return this.riviMaara;
@@ -141,15 +141,15 @@ public abstract class Teksti implements TekstiRajapinta {
     /**
      * Palautetaan tekstiolion teksti, sekä merkki-, rivi- ja sanamäärät String-oliona.
      *
-     * @return
+     * @return Tekstiolion teksti sekä merkki-, sana- ja rivimäärät String-oliona.
      */
     @Override
     public String toString() {
-        String text = getTeksti() +
+        String palautus = getTeksti() +
                 "\n" +
                 "\nCharacter count:\t" + getCharMaara() +
                 "\nRow count:\t\t\t" + getRiviMaara() +
                 "\nWord count:\t\t\t" + getSanaMaara();
-        return text;
+        return palautus;
     }
 }

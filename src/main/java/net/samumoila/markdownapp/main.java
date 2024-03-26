@@ -7,6 +7,12 @@ import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
 import javafx.stage.Stage;
 
+/**
+ * Pääluokka, joka käynnistää ja ajaa ohjelman. Tässä luokassa tapahtuu myös pääosa ohjelman logiikasta.
+ *
+ * @author Samu Moilanen
+ * @see <a href="https://samumoila.net">https://samumoila.net</a>
+ */
 public class main extends Application{
 
     // Alustetaan käyttöliittymä.
@@ -18,11 +24,20 @@ public class main extends Application{
     // Tähän sijoitetaan avatun TAI tallennetun tiedoston tiedostopolku.
     private static String valitunTiedostonPolku = "";
 
+    /**
+     * Päämetodi, joka käynnistää javafx-ohjelman ajon.
+     */
     public static void main(String[] args) {
         // Luodaan yksi olio valmiiksi, ennen kuin on mitään muita avattu.
         kasiteltavaTekstiOlio = new TekstiMarkdown();
         launch(args);
     }
+
+    /**
+     * JavaFX-metodi, jonka kautta toiminnallisuudet pyörivät.
+     *
+     * @param primaryStage Pääasiallinen Stage-olio, jossa ohjelmaa näytetään.
+     */
     @Override
     public void start(Stage primaryStage) {
 
@@ -38,7 +53,7 @@ public class main extends Application{
         });
 
         // PIKANÄPPÄINTEN TOIMINNALLISUUDET
-        // Kopioitu kohdasta "Using accelerator"
+        // Muokattu kohdasta "Using accelerator":
         // https://medium.com/@zoha131/handling-keyboard-shortcuts-in-javafx-2972ba950a48
         KeyCombination pikaAvaa = new KeyCodeCombination(KeyCode.O, KeyCombination.CONTROL_DOWN);
         Runnable runnableAvaa = ()-> this.avaaTiedosto(primaryStage);
@@ -71,23 +86,35 @@ public class main extends Application{
         primaryStage.show();
     }
 
+    /**
+     * Kysyy käyttäjältä, mikä tiedosto halutaan avata ja lukee annetun tiedoston tekstiolion tekstiksi. Metodi kannatti
+     * toteuttaa täällä, koska se lähettää kutsuja moneen suuntaan ja tarvitsee käyttöluvan primaryStage-olioon.
+     *
+     * @param primaryStage JavaFX:n käyttämä Stage-olio.
+     */
     private void avaaTiedosto(Stage primaryStage) {
         valitunTiedostonPolku = UI.kysyAvausSijainti(primaryStage); // Tähän täytyy syöttää Stage, koska FileChooser tarvitsee
         // Jos käyttäjä valitsi sijainnin, avataan tiedosto.
         if (!valitunTiedostonPolku.equals("")) {
-            System.out.println("Opening file: " + valitunTiedostonPolku);
+            System.out.println("Avataan tiedosto: " + valitunTiedostonPolku);
             kasiteltavaTekstiOlio.setTeksti(TiedostonKasittelija.lueTiedosto(valitunTiedostonPolku));
             UI.setTeksti(kasiteltavaTekstiOlio.getTeksti());
             UI.setAlapalkinStatus("Ladattu tiedosto: " + valitunTiedostonPolku);
         }
     }
 
+    /**
+     * Kysyy käyttäjältä, mihin tiedosto halutaan tallentaa ja tallettaa tekstiolion tekstin tiedostoon. Metodi kannatti
+     * toteuttaa täällä, koska se lähettää kutsuja moneen suuntaan ja tarvitsee käyttöluvan primaryStage-olioon.
+     *
+     * @param primaryStage JavaFX:n käyttämä Stage-olio.
+     */
     private void tallennaTiedostoon(Stage primaryStage) {
         kasiteltavaTekstiOlio.setTeksti(UI.getTeksti()); // Päivitetään teksti muokkauskentästä tekstioliolle.
         valitunTiedostonPolku = UI.kysyTallennusSijainti(primaryStage); // Tähän täytyy syöttää Stage, koska FileChooser tarvitsee
         // Jos käyttäjä valitsi sijainnin, tallennetaan tiedosto.
         if (!valitunTiedostonPolku.equals("")) {
-            System.out.println("Saving to file: " + valitunTiedostonPolku);
+            System.out.println("Tallennetaan tiedostoon: " + valitunTiedostonPolku);
             TiedostonKasittelija.tallennaTiedosto(kasiteltavaTekstiOlio.getTeksti(), valitunTiedostonPolku);
             UI.setAlapalkinStatus("Tallennettu tiedostoon: " + valitunTiedostonPolku);
         }

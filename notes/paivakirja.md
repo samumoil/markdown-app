@@ -60,3 +60,8 @@ https://www.geeksforgeeks.org/different-ways-reading-text-file-java/
 - Katsottu ja kommentoitu toisen opiskelijan ohjelmaa.
 - Aloitettu käymään läpi muuttujia ja muutettu niitä private/protected.
 
+# 26.3.
+09.00 - 11.30 = 3,5h
+- Viimeistelty dokumentaatio.
+- Luotu dokumentaatio pääkansioon.
+- Hienosäädetty projektin määrittelytiedostoja.

@@ -13,14 +13,14 @@ class TiedostonKasittelija {
     /**
      * Palauttaa annetussa tiedostopolussa sijaitsevan tiedoston sisällön String-oliona.
      *
-     * @param tiedostoPolku
-     * @return String-olio
+     * @param tiedostoPolku Tiedostopolku, missä tiedosto sijaitsee.
+     * @return String-olio Tiedoston sisältämä teksti String-oliona.
      * @throws Exception
      */
     public static String lueTiedosto(String tiedostoPolku) {
         String palautusTeksti = "";
         try {
-            // Tiedoston lukeminen on kopioitu tämän sivun kohdasta 5:
+            // Tiedoston lukeminen on muokattu tämän sivun kohdasta 5:
             // https://www.geeksforgeeks.org/different-ways-reading-text-file-java/
             palautusTeksti = new String(Files.readAllBytes(Paths.get(tiedostoPolku)));
         } catch (Exception exception) {
@@ -32,8 +32,8 @@ class TiedostonKasittelija {
     /**
      * Tallettaa annetun String-olion tekstitiedostona annettuun tiedostopolkuun.
      *
-     * @param tallennettavaTeksti
-     * @param tiedostoPolku
+     * @param tallennettavaTeksti Tallennettava teksti String-oliona.
+     * @param tiedostoPolku Tiedostopolku, mihin tiedosto tallennetaan.
      */
     public static void tallennaTiedosto (String tallennettavaTeksti, String tiedostoPolku) {
         try {

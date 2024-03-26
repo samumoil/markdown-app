@@ -15,19 +15,22 @@ import java.io.File;
 import java.io.IOException;
 
 /**
- * Luokasta luotu olio toimii ohjelman käyttöliittymänä.
+ * Luokasta luotu olio toimii ohjelman käyttöliittymänä. Luokassa on myös logiikkaa liittyen tekstin näyttämisestä
+ * markdown-muodossa. Luokka kutsuu MarkdownParser-oliota tekstin muuntamiseksi.
  */
 class KayttoLiittyma extends BorderPane {
     // Luodaan ylälaidan palkki, johon liitetään eri valikot.
     private MenuBar menuBar = new MenuBar();
 
-    // Yläpalkin ensimmäinen valikko ja sen alta löytyvät valinnat.
+    // Yläpalkin ensimmäinen valikko ja sen alta löytyvät valinnat. Menu-valikot täytyy olla protected, jotta main.java
+    // voi seurata niiden aktivointia eventhandlerilla.
     private Menu menuTiedosto = new Menu("Tiedosto");
     protected MenuItem avaaTiedosto = new MenuItem("Avaa tiedosto...");
     protected MenuItem tallennaTiedosto = new MenuItem("Tallenna");
     protected MenuItem suljeSovellus = new MenuItem("Sulje");
 
-    // Vasemmalla näkyvä iso kirjoituskenttä.
+    // Vasemmalla näkyvä iso kirjoituskenttä. Tekstikentän täytyy olla protected, jotta main.java voi seurata sen
+    // aktivointia eventhandlerilla.
     protected TextArea muokkausKentta = new TextArea();
     // Oikealla näkyvä tekstialue. Näyttää "käsitellyn" tekstin.
     private WebView nayttoKentta = new WebView();
@@ -56,11 +59,11 @@ class KayttoLiittyma extends BorderPane {
     private Text alapalkinStatus = new Text();
 
     // Luodaan valmiiksi markdownparseri ja syötetään sille tervetuloteksti.
-    private MarkdownParser markdownParserOlio = new MarkdownParser(tervetuloTeksti);
+    private MarkdownParser markdownParserOlio = new MarkdownParser();
 
     /**
      * Asetetaan edellä luodut asiat paikoilleen. Tätä apumetodia kutsutaan varsinaisessa alustajassa
-     * ja näin saadaan pidettyä oikea alustaja siistinä.
+     * ja näin saadaan pidettyä oikeat alustajat siistinä.
      */
     private void alustajaApuri() {
         // Koko ikkunan minimikoko ja haluttu koko.
@@ -75,7 +78,10 @@ class KayttoLiittyma extends BorderPane {
         // Asetetaan muokkauskenttään vihjeteksti.
         muokkausKentta.setPromptText(quickStartTeksti);
         // Ajetaan näyttökentän renderöinti kerran, jotta saadaan tervetuloteksti näkyviin.
+        // Tässä ei voi käyttää valmista metodia, koska metodin käyttämä muokkauskenttä on tässä vaiheessa tyhjä.
+        markdownParserOlio.setText(tervetuloTeksti);
         markdownParserOlio.run();
+        this.nayttoKentta.getEngine().loadContent(markdownParserOlio.getHtml());
         // Laitetaan nämä kaksi tekstikenttää HBox sisälle, jotta ne ovat tasavertaisia.
         HBox keskiosa = new HBox(muokkausKentta, nayttoKentta);
         this.paivitaKenttienKoko();
@@ -102,26 +108,25 @@ class KayttoLiittyma extends BorderPane {
      */
     public KayttoLiittyma() {
         this.alustajaApuri();
-        // Ajetaan renderöinti kerran, jotta saadaan tervetuloteksti suoraan näkyviin oikealle puolelle.
-        this.naytaTekstiKasiteltyna();
     }
 
     /**
-     * Alustaja, jolle voidaan syöttää aloitusteksti.
+     * Alustaja, jolle voidaan syöttää aloitusteksti. Tätä voisi käyttää, jos halutaan, että ohjelma avaa viimeksi
+     * käsitellyn tiedoston suoraan.
      *
-     * @param tekstiIn
+     * @param tekstiIn Haluttu teksti String-oliona. Tämä teksti tulee näkyviin muokkauskenttään ja näyttökenttään.
      */
     public KayttoLiittyma(String tekstiIn) {
         this.alustajaApuri();
         muokkausKentta.setText(tekstiIn);
         // Ajetaan renderöinti kerran, jotta saadaan haluttu aloitusteksti suoraan näkyviin oikealle puolelle.
-        markdownParserOlio.run();
+        this.naytaTekstiKasiteltyna();
     }
 
     /**
      * Asettaa annetun String-olion tekstin muokkauskentän tekstiksi ja päivittää oikean puolen näkymän.
      *
-     * @param tekstiIn
+     * @param tekstiIn Haluttu teksti String-oliona.
      */
     public void setTeksti(String tekstiIn) {
         muokkausKentta.setText(tekstiIn);
@@ -131,7 +136,7 @@ class KayttoLiittyma extends BorderPane {
     /**
      * Palauttaa muokkauskentän tekstin String-oliona.
      *
-     * @return
+     * @return Muokkauskentän sisältämä teksti String-oliona.
      */
     public String getTeksti() {
         return muokkausKentta.getText();
@@ -140,8 +145,8 @@ class KayttoLiittyma extends BorderPane {
     /**
      * Kysyy käyttäjältä, minkä tiedoston tämä haluaa avata. Käytetään JavaFX:n FileChooser-toimintoa.
      *
-     * @param primaryStage
-     * @return
+     * @param primaryStage Pääohjelman käyttämä (JavaFX) Stage-olio.
+     * @return Halutun tiedoston sijainti String-oliona.
      */
     public String kysyAvausSijainti(Stage primaryStage) {
         String tiedostoSijainti = "";
@@ -171,15 +176,14 @@ class KayttoLiittyma extends BorderPane {
                 throw new RuntimeException(e);
             }
         }
-
         return tiedostoSijainti;
     }
 
     /**
      * Kysyy käyttäjältä tallennussijaintia käyttämällä JavaFX:n FileChooser-toimintoa.
      *
-     * @param primaryStage
-     * @return
+     * @param primaryStage Pääohjelman käyttämä (JavaFX) Stage-olio.
+     * @return Halutun tallennissijainti String-oliona.
      */
     public String kysyTallennusSijainti(Stage primaryStage) {
         String tiedostoSijainti = "";
@@ -251,9 +255,9 @@ class KayttoLiittyma extends BorderPane {
     /**
      * Päivittää alapalkissa näkyvät laskurit annetuilla lukumäärillä.
      *
-     * @param charMaara
-     * @param sanaMaara
-     * @param riviMaara
+     * @param charMaara Näytettävä merkkimäärä int-muuttujana.
+     * @param sanaMaara Näytettävä sanamäärä int-muuttujana.
+     * @param riviMaara Näytettävä rivimäärä int-muuttujana.
      */
     public void paivitaAlapalkki(int charMaara, int sanaMaara, int riviMaara) {
         this.merkkiMaaraTeksti.setText("Merkkejä: " + charMaara);
@@ -264,7 +268,7 @@ class KayttoLiittyma extends BorderPane {
     /**
      * Päivittää alapalkin status-kenttään annetun tekstin.
      *
-     * @param statusTeksti
+     * @param statusTeksti Näytettävä status-teksti String-oliona.
      */
     public void setAlapalkinStatus(String statusTeksti) {
         this.alapalkinStatus.setText(statusTeksti);
