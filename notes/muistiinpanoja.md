@@ -3,3 +3,5 @@
 - markdown-luokalle jotain erityistä?
 
 yhteensä 6 viittausta nettilinkkeihin
+
+javadoc laajentaminen
