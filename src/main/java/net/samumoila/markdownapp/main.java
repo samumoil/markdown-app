@@ -69,9 +69,18 @@ public class main extends Application{
         // Päivitetään tekstioliota ja näyttökenttää jokaisen näppäinpainalluksen jälkeen.
         UI.muokkausKentta.setOnKeyTyped(e -> {
             kasiteltavaTekstiOlio.setTeksti(UI.getTeksti());
-            UI.naytaTekstiKasiteltyna();
+            if (UI.getOnkoMarkdownNakyvissa()) // Mutta ei päivitetä näkymää turhaan, jos markdown-näkymä ei ole päällä.
+                UI.naytaTekstiKasiteltyna();
             UI.paivitaAlapalkki(kasiteltavaTekstiOlio.getCharMaara(), kasiteltavaTekstiOlio.getSanaMaara(), kasiteltavaTekstiOlio.getRiviMaara());
             UI.setAlapalkinStatus(""); // Tyhjennetään status, jos siellä on vaikka tallennuksen kuittaus.
+        });
+
+        UI.markdownNappi.setOnAction(e -> {
+            if (UI.getOnkoMarkdownNakyvissa()) {
+                UI.piilotaMarkdown();
+            } else {
+                UI.naytaMarkdown();
+            }
         });
 
         // Luodaan kehys tässä vaiheessa, koska seuraavaksi pikanäppäimet tarvitsevat sitä.

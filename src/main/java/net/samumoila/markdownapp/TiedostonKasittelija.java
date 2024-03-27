@@ -7,6 +7,8 @@ import java.nio.file.Paths;
 
 /**
  * Lukee tiedoston tiedostopolusta ja palauttaa sen sisällön String-oliona.
+ *
+ * Tästä luokasta ei ole tarkoitus luoda oliota, vaan sen staattisia luokkia käytetään suoraan.
  */
 class TiedostonKasittelija {
 
@@ -30,7 +32,7 @@ class TiedostonKasittelija {
     }
 
     /**
-     * Tallettaa annetun String-olion tekstitiedostona annettuun tiedostopolkuun.
+     * Tallentaa annetun String-olion tekstitiedostona annettuun tiedostopolkuun.
      *
      * @param tallennettavaTeksti Tallennettava teksti String-oliona.
      * @param tiedostoPolku Tiedostopolku, mihin tiedosto tallennetaan.

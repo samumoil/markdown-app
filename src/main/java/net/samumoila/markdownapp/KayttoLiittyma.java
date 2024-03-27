@@ -1,10 +1,7 @@
 package net.samumoila.markdownapp;
 
 import javafx.geometry.Insets;
-import javafx.scene.control.Menu;
-import javafx.scene.control.MenuBar;
-import javafx.scene.control.MenuItem;
-import javafx.scene.control.TextArea;
+import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
@@ -16,14 +13,14 @@ import java.io.IOException;
 
 /**
  * Luokasta luotu olio toimii ohjelman käyttöliittymänä. Luokassa on myös logiikkaa liittyen tekstin näyttämisestä
- * markdown-muodossa. Luokka kutsuu MarkdownParser-oliota tekstin muuntamiseksi.
+ * markdown-muodossa. Luokka luo ja kutsuu MarkdownParser-oliota tekstin muuntamiseksi.
  */
 class KayttoLiittyma extends BorderPane {
     // Luodaan ylälaidan palkki, johon liitetään eri valikot.
     private MenuBar menuBar = new MenuBar();
 
-    // Yläpalkin ensimmäinen valikko ja sen alta löytyvät valinnat. Menu-valikot täytyy olla protected, jotta main.java
-    // voi seurata niiden aktivointia eventhandlerilla.
+    // Yläpalkin ensimmäinen valikko ja sen alta löytyvät valinnat. Menu-valikot täytyy olla vähintään protected,
+    // jotta main.java voi seurata niiden aktivointia eventhandlerilla.
     private Menu menuTiedosto = new Menu("Tiedosto");
     protected MenuItem avaaTiedosto = new MenuItem("Avaa tiedosto...");
     protected MenuItem tallennaTiedosto = new MenuItem("Tallenna");
@@ -34,6 +31,11 @@ class KayttoLiittyma extends BorderPane {
     protected TextArea muokkausKentta = new TextArea();
     // Oikealla näkyvä tekstialue. Näyttää "käsitellyn" tekstin.
     private WebView nayttoKentta = new WebView();
+    // Luodaan kahdelle edelliselle HBox, jotta ne ovat tasavertaisia. Alustajassa liitetään tähän.
+    HBox keskiosa = new HBox(muokkausKentta, nayttoKentta);
+
+    // Tämä liittyy "piilota/näytä markdown" nappiin.
+    private boolean onkoMarkdownNakyvissa = true;
 
     // Tämä teksti näkyy kirjoituskentässä, jos se on tyhjä eikä se ole aktiivisena.
     private String quickStartTeksti = "Kokeile *teksti* kursiiville tai **teksti** tummennetulle tekstille. " +
@@ -52,23 +54,24 @@ class KayttoLiittyma extends BorderPane {
     private File valittuTiedostoOlio = new File("");
 
     // Alarivin palkki, jossa näytetään tietoja.
-    private HBox alapalkki = new HBox(10);
+    private HBox alapalkinMittarit = new HBox(10);
     private Text merkkiMaaraTeksti = new Text();
     private Text sanaMaaraTeksti = new Text();
     private Text riviMaaraTeksti = new Text();
     private Text alapalkinStatus = new Text();
+    protected Button markdownNappi = new Button("Piilota Markdown");
+    private BorderPane alapalkki = new BorderPane();
 
-    // Luodaan valmiiksi markdownparseri ja syötetään sille tervetuloteksti.
+    // Luodaan valmiiksi markdownparseri.
     private MarkdownParser markdownParserOlio = new MarkdownParser();
 
     /**
-     * Asetetaan edellä luodut asiat paikoilleen. Tätä apumetodia kutsutaan varsinaisessa alustajassa
+     * Asetetaan edellä luodut asiat paikoilleen. Tätä apumetodia kutsutaan varsinaisissa alustajissa
      * ja näin saadaan pidettyä oikeat alustajat siistinä.
      */
     private void alustajaApuri() {
         // Koko ikkunan minimikoko ja haluttu koko.
-        this.setMinSize(600,600);
-        this.setPrefSize(1000, 1000);
+        this.setPrefSize(800, 800);
 
         // Liitetään yläosan valikoihin halutut asiat.
         menuTiedosto.getItems().addAll(avaaTiedosto, tallennaTiedosto, suljeSovellus);
@@ -82,15 +85,19 @@ class KayttoLiittyma extends BorderPane {
         markdownParserOlio.setText(tervetuloTeksti);
         markdownParserOlio.run();
         this.nayttoKentta.getEngine().loadContent(markdownParserOlio.getHtml());
+
         // Laitetaan nämä kaksi tekstikenttää HBox sisälle, jotta ne ovat tasavertaisia.
-        HBox keskiosa = new HBox(muokkausKentta, nayttoKentta);
         this.paivitaKenttienKoko();
         this.setCenter(keskiosa);
 
         // Alapalkin säädöt
-        alapalkki.setPadding(new Insets(5, 5, 5, 5));
+        Insets alapalkinInsets = new Insets(5, 5, 5, 5);
+        alapalkinMittarit.setPadding(alapalkinInsets);
+        alapalkinMittarit.getChildren().addAll(merkkiMaaraTeksti, sanaMaaraTeksti, riviMaaraTeksti, alapalkinStatus);
         this.paivitaAlapalkki(0, 0, 0);
-        alapalkki.getChildren().addAll(merkkiMaaraTeksti, sanaMaaraTeksti, riviMaaraTeksti, alapalkinStatus);
+        alapalkki.setPadding(alapalkinInsets);
+        alapalkki.setLeft(alapalkinMittarit);
+        alapalkki.setRight(markdownNappi);
         this.setBottom(alapalkki);
 
         // Alustetaan tiedostonvalitsijat
@@ -218,12 +225,16 @@ class KayttoLiittyma extends BorderPane {
     }
 
     /**
-     * Päivittää muokkaus- ja näyttökenttien leveyden vastaamaan puolta
-     * koko ikkunan leveydestä. Tämä aktivoidaan aina, kun ikkunan kokoa muutetaan.
+     * Päivittää muokkaus- ja näyttökenttien leveyden vastaamaan puolta koko ikkunan leveydestä. Jos näkyvissä on vain
+     * muokkauskenttä, sen koko venytetään koko ikkunan kokoiseksi. Tämä aktivoidaan aina, kun ikkunan kokoa muutetaan.
      */
     public void paivitaKenttienKoko() {
-        muokkausKentta.setPrefWidth(this.getWidth()/2);
-        nayttoKentta.setPrefWidth(this.getWidth()/2);
+        if (onkoMarkdownNakyvissa) {
+            muokkausKentta.setPrefWidth(this.getWidth() / 2);
+            nayttoKentta.setPrefWidth(this.getWidth() / 2);
+        } else {
+            muokkausKentta.setPrefWidth(this.getWidth());
+        }
     }
 
     /**
@@ -272,5 +283,30 @@ class KayttoLiittyma extends BorderPane {
      */
     public void setAlapalkinStatus(String statusTeksti) {
         this.alapalkinStatus.setText(statusTeksti);
+    }
+
+    /**
+     * Piilottaa oikealla puolella näkyvän markdown-näyttökentän ja muuttaa napin tekstin.
+     */
+    public void piilotaMarkdown() {
+        this.keskiosa.getChildren().remove(nayttoKentta);
+        this.onkoMarkdownNakyvissa = false;
+        this.markdownNappi.setText("Näytä markdown");
+        this.paivitaKenttienKoko();
+    }
+
+    /**
+     * Tuo näkyviin oikean puolen markdown-näyttökentän ja muuttaa napin tekstin.
+     */
+    public void naytaMarkdown() {
+        this.keskiosa.getChildren().add(nayttoKentta);
+        this.onkoMarkdownNakyvissa = true;
+        this.markdownNappi.setText("Piilota markdown");
+        this.paivitaKenttienKoko();
+        this.naytaTekstiKasiteltyna();
+    }
+
+    public boolean getOnkoMarkdownNakyvissa() {
+        return onkoMarkdownNakyvissa;
     }
 }

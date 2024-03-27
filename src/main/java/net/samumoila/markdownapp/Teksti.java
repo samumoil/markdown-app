@@ -1,11 +1,11 @@
 package net.samumoila.markdownapp;
 
 /**
- * Abstrakti luokka, joka kuvastaa yksinkertaisinta mahdollista tekstiä, esimerkiksi txt-tiedostoon tallennettua.
+ * Abstrakti luokka, joka kuvastaa yksinkertaisinta mahdollista tekstiä.
  */
 public abstract class Teksti implements TekstiRajapinta {
     private String paaTeksti;
-    private int charMaara;
+    private int charMaara; // Tekstin merkkimäärä.
     private int sanaMaara;
     private int riviMaara;
 
