@@ -31,3 +31,4 @@ During the course we learned and practised using these programming principles of
 - threading
 - using files for text and object saving and retrieval
 - generic types and linked lists
+- javadoc documentation

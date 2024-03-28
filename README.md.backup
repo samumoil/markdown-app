@@ -29,5 +29,6 @@ During the course we learned and practised using these programming principles of
 - objects and inheritance
 - attribute and method visibility
 - threading
-- using file for text and object saving and retrieval
+- using files for text and object saving and retrieval
 - generic types and linked lists
+- javadoc documentation
