@@ -1,61 +1,3 @@
-# Markdown-app - Käyttäjän opas
-
-Tekijä Samu Moilanen
-
-## Asennus
-
-Ohjelman kehitystiedostot, muistiinpanot sekä tämä dokumentti löytyvät osoitteesta [https://github.com/samumoil/markdown-app](https://github.com/samumoil/markdown-app) ja halutessasi voit ladata ohjelman tiedot zip-pakettina suoraan [tästä linkistä](https://github.com/samumoil/markdown-app/archive/refs/heads/main.zip). Ladattu zip-paketti täytyy purkaa ja avata projektin tiedot esimerkiksi IntelliJ-ohjelmistolla. Avattuasi projektin täytyy se vielä kääntää ja sitten ajaa.
-
-## Käyttö
-
-Ohjelman avattuasi näet käytössäsi kaksi vierekkäistä kenttää, vasemmalla *muokkauskentän* ja oikealla *näyttökentän*. Kirjoita haluamasi teksti muokkauskenttään ja ohjelma näyttää tekstisi markdown-kielellä muutettuna näyttökentässä.
-
-Näet tekstisi sisältämän merkki-, rivi- ja sanamäärän alapalkin vasemmassa laidassa.
-
-Halutessasi voit piilottaa näyttökentän ohjelmaikkunan oikeassa alalaidassa olevasta napista. Saat näytön takaisin samasta napista.
-
-Tiedostojen avaus ja tallennus tapahtuu joko pikanäppäimillä *ctrl+o* ja *ctrl+s* tai tiedostovalikon kautta.
-
-### Aloitusnäkymä
-
-![](markdown-app_aloituskuva.png)
-
-### Malliteksti
-
-![](markdown-app_malliteksti.png)
-
-# Kehittäjän opas
-
-## Ohjelman rakenne
-
-Ohjelman UML-kaavion näet alla ja siitä huomaat, että ohjelman toiminta jakautuu kolmeen osaan: Teksti-olio, käyttöliittymä (sisältäen markdown-parserin) sekä tiedostonkäsittelijä. Pääohjelma käyttää pääosan kaikesta toimintalogiikasta, lukuunottamatta markdown-parserin käyttöä.
-
-Kirjoitetun tekstin *source-of-truth* on teksti-olion paaTeksti attribuutti, johon kirjoitettu teksti päivitetään jokaisen muutoksen jälkeen, ja joka haetaan tarvittaessa eri toimintoihin. Ohjelman suunnitteluvaiheessa on ajateltu ohjelman olevan laajennettavissa monenlaisiin tekstitiedostoihin, mutta niitä ei ole vielä toteutettu. Tämän vuoksi tekstimarkdown-olio pohjautuu rajapintaan ja abstraktiin luokkaan "teksti".
-
-TekstiMarkdown-luokkaan on tarkoitus toteuttaa erityisesti markdown-tekstiin liittyviä asioita. Näitä voisivat olla tulevaisuudessa esimerkiksi pääotsikoiden rivisijainti, linkkien kerääminen listaan ja ulkoisten kuvien listaaminen. Näitä asioita voisi halutessaan näyttää käyttöliittymällä.
-
-Tekstin renderöinti toteutetaan erillisessä säikeessä, jotta ohjelma toimii sulavasti myös pitkien tekstien kanssa. Tällä hetkellä koodi on toteutettu niin, että pitkän renderöinnin aikana kirjoitettu teksti otetaan käsittelyyn vasta, kun edellinen renderöinti on ohi. Eli välttämättä jokaisen kirjaimen jälkeen ei tapahdu renderöintiä, mutta näin varmistetaan ohjelman sulava käyttö.
-
-Tekstin näyttämiseen markdown-kielellä käytetään projektia nimeltä [commonmark-java](https://github.com/commonmark/commonmark-java). Projekti tuodaan ohjelmaan moduulina.
-
-### UML-kaavio
-
-Kaaviossa näkyvät kaikki ohjelman toiminnan kannalta olennaiset attribuutit ja metodit.
-
-![](markdown-app_UML.png)
-
-### Javadoc
-
-Ohjelman javadoc-dokumentaatio löytyy osoitteesta [https://github.com/samumoil/markdown-app/tree/main/javadoc](https://github.com/samumoil/markdown-app/tree/main/javadoc).
-
-## Kehityskohteet
-
-Ohjelmassa on kaksi selkeää kehityskohdetta: ulkoasu ja erilaisten tiedostomuotojen tukeminen.
-
-Ulkoasua voisi hioa ainakin lisäämällä "darkmode" ja käyttämällä yhtenäisiä fontteja.
-
-Tiedostomuotojen lukemiseen ja tiedostopäätteen perusteella tapahtuvaan toiminnanohjaamiseen voisi paneutua jatkokehityksessä. Tällä hetkellä rajapinnan ja erilaisten teksti-luokkien käyttö on vasta suunnitteluasteella.
-
 # PROJEKTIKERTOMUS
 
 Itä-Suomen yliopiston Ohjelmointi II -kurssin lopputyönä opiskelijoiden tuli koodata itse ohjelma, joka monipuolisesti hyödyntää Java-kielen luokkia, rajapintoja sekä javafx-ulkoasun ominaisuuksia. Olen jo jonkin aikaa ollut kiinnostunut Markdown-kielestä ja siitä sain ajatuksen tehdä oma markdown-editori. 
@@ -119,40 +61,11 @@ Parannettavaa tässä työssä on kesken jäänyt rajapinnan ja Teksti-luokan hy
 - Luotu dokumentaatio pääkansioon.
 - Hienosäädetty projektin määrittelytiedostoja.
 
-## 27.3. - 1h
+## 27.3. - 2h
 - Pientä hienosäätöä
 - Lisätty "piilota/näytä markdown"-nappi ja sen toiminnallisuus
+- Aloitettu projektikertomuksen ja muiden kurssiin liittyvien dokumenttien kirjaaminen.
+- UML-kaavio piirretty.
 
-# Itsearviointi
-
-Hyväksytty aihe (1 piste)
-   - 1p - Aihe hyväksytty
-
-Hyväksytty olioluokka (1 piste)
-   - 1p - Olioluokka hyväksytty
-
-Hyväksytty keskeneräisen ohjelman palautus (1 piste)
-   - 1p - Keskeneräinen ohjelma palautettu
-
-Ohjelmakoodi: toteuttaa suunnitelman, koodin loogisuus, selkeys ja yleisesti hyvien Javakielen ohjelmoinnin periaatteiden noudattaminen (6 p)
-   - 6p - Ohjelma toteuttaa suunnitelman. Koodi ja sen dokumentaatio on tehty selkeästi ja kattavasti. Luokkien käyttö ja rajaus on loogista. Muuttujien, metodien ja luokkien nimet on merkitty käytänteiden mukaan.
-
-Kurssilla käsiteltyjen asioiden monipuolinen käyttö ohjelmassa (luokat, rajapinta, abstrakti luokka, graafisen käyttöliittymän ominaisuudet) (6 p)
-   - 5p - Ohjelmassa käytetään erilaisia luokkia ja niiden suhteita. Tosin osa niiden käytöstä on vain "valmistautumista jatkokehitykseen". Käyttöliittymässä ei käytetä kaikkia kurssin asioita erityisen monipuolisesti, mutta toisaalta on opiskeltu itse uusia asioita ja käytetty niitä (valikot ja pikanäppäimet).
-
-Ohjelman aiheen ja sen toteutuksen haasteellisuus (6 p)
-   - 4p - Tämän osion arvioinnin koin haastavaksi, koska käsitys "perusohjelman" haasteellisuudesta on vaikea muodostaa. Mielestäni ohjelman kokonaisuus on kurssin tehtäviin nähden melko haastava, muttei ehkä "erityisen" haastava.
-
-JavaDoc: dokumentaation kattavuus (onko kaikki dokumentoitu) ja laajuus (kuinka kuvaavia kuvaukset ovat) (6 p)
-   - 6p - Kaikki julkiset luokat ja metodit sekä itse pakkaus ja moduuli on dokumentoitu. Dokumentoinnin laajuus kattaa arvioinnin kohdat.
-
-Kehittämisopas: ohjelman kuvauksen kattavuus ja sen antamat eväät jatkokehitykselle; asennusohjeen ja käyttöohjeen selkeys (6 p)
-   - 6p - Oppaassa on selostettu luokkien ja metodien väliset suhteet ja avattu ohjelman toimintalogiikkaa.
-
-Projektikertomus: ajankäytön selvityksen kattavuus ja tarkkuus; oman oppimisen arvioinnin
-   monipuolisuus ja kattavuus (1 p)
-   - 1p - Projektikertomuksessa on kuvattu prosessia ja arvioitu omaa oppimista.
-
-Itsearviointi (osana projektikertomusta): arvostelun eri osien pisteytys ja kunkin osan pisteiden perustelut (1 p)
-   - 1p - Kukin osa-alue on arvioitu ja perusteltu.
-
+## 28.3. - 2h
+- Kurssin ja projektin dokumentaation viimeistelyä.
