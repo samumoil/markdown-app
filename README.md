@@ -1,4 +1,4 @@
-# markdown-app
+# Markdown-app
 
 A simple markdown viewer and editor.
 
