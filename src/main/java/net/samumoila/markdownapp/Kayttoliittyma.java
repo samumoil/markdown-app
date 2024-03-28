@@ -15,7 +15,7 @@ import java.io.IOException;
  * Luokasta luotu olio toimii ohjelman käyttöliittymänä. Luokassa on myös logiikkaa liittyen tekstin näyttämisestä
  * markdown-muodossa. Luokka luo ja kutsuu MarkdownParser-oliota tekstin muuntamiseksi.
  */
-class KayttoLiittyma extends BorderPane {
+class Kayttoliittyma extends BorderPane {
     // Luodaan ylälaidan palkki, johon liitetään eri valikot.
     private MenuBar menuBar = new MenuBar();
 
@@ -78,11 +78,12 @@ class KayttoLiittyma extends BorderPane {
         menuBar.getMenus().addAll(menuTiedosto);
         this.setTop(menuBar);
 
-        // Asetetaan muokkauskenttään vihjeteksti.
+        // Asetetaan muokkauskenttään vihjeteksti ja määritellään tekstin riville vaihto.
         muokkausKentta.setPromptText(quickStartTeksti);
+        muokkausKentta.setWrapText(true);
         // Ajetaan näyttökentän renderöinti kerran, jotta saadaan tervetuloteksti näkyviin.
         // Tässä ei voi käyttää valmista metodia, koska metodin käyttämä muokkauskenttä on tässä vaiheessa tyhjä.
-        markdownParserOlio.setText(tervetuloTeksti);
+        markdownParserOlio.setTeksti(tervetuloTeksti);
         markdownParserOlio.run();
         this.nayttoKentta.getEngine().loadContent(markdownParserOlio.getHtml());
 
@@ -113,7 +114,7 @@ class KayttoLiittyma extends BorderPane {
     /**
      * Oletusalustaja ilman aloitustekstiä.
      */
-    public KayttoLiittyma() {
+    public Kayttoliittyma() {
         this.alustajaApuri();
     }
 
@@ -123,7 +124,7 @@ class KayttoLiittyma extends BorderPane {
      *
      * @param tekstiIn Haluttu teksti String-oliona. Tämä teksti tulee näkyviin muokkauskenttään ja näyttökenttään.
      */
-    public KayttoLiittyma(String tekstiIn) {
+    public Kayttoliittyma(String tekstiIn) {
         this.alustajaApuri();
         muokkausKentta.setText(tekstiIn);
         // Ajetaan renderöinti kerran, jotta saadaan haluttu aloitusteksti suoraan näkyviin oikealle puolelle.
@@ -151,6 +152,8 @@ class KayttoLiittyma extends BorderPane {
 
     /**
      * Kysyy käyttäjältä, minkä tiedoston tämä haluaa avata. Käytetään JavaFX:n FileChooser-toimintoa.
+     *
+     * Metodi voi antaa virheilmoituksen, jos tiedostonimissä tai -polussa on ongelmia.
      *
      * @param primaryStage Pääohjelman käyttämä (JavaFX) Stage-olio.
      * @return Halutun tiedoston sijainti String-oliona.
@@ -188,6 +191,8 @@ class KayttoLiittyma extends BorderPane {
 
     /**
      * Kysyy käyttäjältä tallennussijaintia käyttämällä JavaFX:n FileChooser-toimintoa.
+     *
+     * Metodi voi antaa virheilmoituksen, jos tiedostonimissä tai -polussa on ongelmia.
      *
      * @param primaryStage Pääohjelman käyttämä (JavaFX) Stage-olio.
      * @return Halutun tallennissijainti String-oliona.
@@ -240,11 +245,13 @@ class KayttoLiittyma extends BorderPane {
     /**
      * Syöttää muokkauskentän tekstin markdown-parserille, luo uuden säikeen ja ajaa parserin siinä.
      * Lopuksi syöttää parserin tuottaman html-stringin näyttökenttään.
+     *
+     * Metodi voi antaa virheilmoituksen, jos säikeen muodostamisessa ja ajossa tulee ongelmia.
      */
     public void naytaTekstiKasiteltyna() {
         // Ei tehdä mitään, jos edellinen renderöinti on vielä kesken.
         if (!markdownParserOlio.getRenderKesken()) {
-            markdownParserOlio.setText(this.getTeksti());
+            markdownParserOlio.setTeksti(this.getTeksti());
             // Asetetaan renderöinti pyörimään eri säikeeseen, jotta kuormitus tasoittuu.
             // Syntaksi kopioitu https://stackoverflow.com/a/5853198
 

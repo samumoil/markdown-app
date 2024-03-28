@@ -6,7 +6,9 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 
 /**
- * Lukee tiedoston tiedostopolusta ja palauttaa sen sisällön String-oliona.
+ * Lukee tiedoston tiedostopolusta ja palauttaa sen sisällön String-oliona. Tässä ohjelman versiossa tiedoston
+ * sisällön täytyy olla luettavissa suoraan tekstinä. Tiedostopäätteellä sinänsä ei ole merkitystä, tosin
+ * tiedostonvalitsija hakee oletuksena vain *.txt ja *.md tiedostopäätteitä.
  *
  * Tästä luokasta ei ole tarkoitus luoda oliota, vaan sen staattisia luokkia käytetään suoraan.
  */
@@ -14,6 +16,8 @@ class TiedostonKasittelija {
 
     /**
      * Palauttaa annetussa tiedostopolussa sijaitsevan tiedoston sisällön String-oliona.
+     *
+     * Metodi voi antaa virheilmoituksen, jos tiedoston lukemisessa on ongelmia.
      *
      * @param tiedostoPolku Tiedostopolku, missä tiedosto sijaitsee.
      * @return String-olio Tiedoston sisältämä teksti String-oliona.
@@ -25,14 +29,16 @@ class TiedostonKasittelija {
             // Tiedoston lukeminen on muokattu tämän sivun kohdasta 5:
             // https://www.geeksforgeeks.org/different-ways-reading-text-file-java/
             palautusTeksti = new String(Files.readAllBytes(Paths.get(tiedostoPolku)));
-        } catch (Exception exception) {
-            exception.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         return palautusTeksti;
     }
 
     /**
      * Tallentaa annetun String-olion tekstitiedostona annettuun tiedostopolkuun.
+     *
+     * Metodi voi antaa virheilmoituksen, jos annetun tiedostopolun kanssa on ongelmia.
      *
      * @param tallennettavaTeksti Tallennettava teksti String-oliona.
      * @param tiedostoPolku Tiedostopolku, mihin tiedosto tallennetaan.

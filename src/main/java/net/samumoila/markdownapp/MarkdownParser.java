@@ -15,7 +15,7 @@ public class MarkdownParser implements Runnable {
     // Nämä kolme riviä ovat lähes suoraan markdown-parserin ohjeesta
     private Parser parser = Parser.builder().build();
     private HtmlRenderer renderer = HtmlRenderer.builder().build();
-    private Node document;
+    private Node teksti;
 
     private String html = "";
     private boolean renderKesken = false;
@@ -24,7 +24,7 @@ public class MarkdownParser implements Runnable {
      * Alustaja ilman annettua tekstiä.
      */
     public MarkdownParser() {
-        this.document = parser.parse("");
+        this.teksti = parser.parse("");
     }
 
     /**
@@ -33,7 +33,7 @@ public class MarkdownParser implements Runnable {
      * @param tekstiIn Alustajalle syötettävä teksti String-oliona.
      */
     public MarkdownParser(String tekstiIn) {
-        this.document = parser.parse(tekstiIn);
+        this.teksti = parser.parse(tekstiIn);
     }
 
     /**
@@ -41,8 +41,8 @@ public class MarkdownParser implements Runnable {
      *
      * @param teksti Käsiteltävä teksti String-oliona.
      */
-    public void setText(String teksti) {
-        this.document = parser.parse(teksti);
+    public void setTeksti(String teksti) {
+        this.teksti = parser.parse(teksti);
     }
 
     /**
@@ -71,7 +71,7 @@ public class MarkdownParser implements Runnable {
     @Override
     public void run() {
         renderKesken = true;
-        this.html = renderer.render(document);
+        this.html = renderer.render(teksti);
         renderKesken = false;
     }
 }

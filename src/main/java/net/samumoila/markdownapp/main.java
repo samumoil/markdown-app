@@ -16,7 +16,7 @@ import javafx.stage.Stage;
 public class main extends Application{
 
     // Alustetaan käyttöliittymä.
-    private KayttoLiittyma UI = new KayttoLiittyma();
+    private Kayttoliittyma UI = new Kayttoliittyma();
 
     // Määritellään muistipaikka ja kutsumanimi käsiteltävälle tekstioliolle.
     private static Teksti kasiteltavaTekstiOlio;

@@ -1,7 +1,5 @@
 # Markdown-app - Käyttäjän opas
 
-Tekijä Samu Moilanen
-
 ## Asennus
 
 Ohjelman kehitystiedostot, muistiinpanot sekä tämä dokumentti löytyvät osoitteesta [https://github.com/samumoil/markdown-app](https://github.com/samumoil/markdown-app) ja halutessasi voit ladata ohjelman tiedot zip-pakettina suoraan [tästä linkistä](https://github.com/samumoil/markdown-app/archive/refs/heads/main.zip). Ladattu zip-paketti täytyy purkaa ja avata projektin tiedot esimerkiksi IntelliJ-ohjelmistolla. Avattuasi projektin täytyy se vielä kääntää ja sitten ajaa.
