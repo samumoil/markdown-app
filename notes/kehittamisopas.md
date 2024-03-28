@@ -26,6 +26,6 @@ Ohjelman javadoc-dokumentaatio löytyy osoitteesta [https://github.com/samumoil/
 
 Ohjelmassa on kaksi selkeää kehityskohdetta: ulkoasu ja erilaisten tiedostomuotojen tukeminen.
 
-Ulkoasua voisi hioa ainakin lisäämällä "darkmode" ja käyttämällä yhtenäisiä fontteja.
+Ulkoasua voisi hioa ainakin lisäämällä "darkmode" ja käyttämällä yhtenäisiä fontteja. Aiemmin mainittuja ajatuksia markdown-tekstiluokan ominaisuuksista, voisi hyödyntää tekemällä näkymän oikeaan laitaan listan tekstin otsikkotasoista. Tähän voisi hyvin käyttää javan rakennetta ArrayList<String> ja näyttää otsikkotasot ListView-näkymässä. Otsikkoa painamalla näkymä hyppäisi kyseisen otsikon kohdalle.
 
 Tiedostomuotojen lukemiseen ja tiedostopäätteen perusteella tapahtuvaan toiminnanohjaamiseen voisi paneutua jatkokehityksessä. Tällä hetkellä rajapinnan ja erilaisten teksti-luokkien käyttö on vasta suunnitteluasteella.
